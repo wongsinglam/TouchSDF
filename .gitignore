@@ -35,3 +35,4 @@ notebooks/
 data/ABC_test
 data/ABC_train
 data/real_objects
+*.npy

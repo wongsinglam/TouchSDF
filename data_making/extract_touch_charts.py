@@ -46,7 +46,7 @@ def load_environment(args, robot_config, pb):
 def main(args):
     time_step = 1. / 960  # low for small objects
 
-    if args.show_gui:
+    if args["show_gui"]:
         pb = bc.BulletClient(connection_mode=p.GUI)
         pb.configureDebugVisualizer(pb.COV_ENABLE_RGB_BUFFER_PREVIEW, 0)
         pb.configureDebugVisualizer(pb.COV_ENABLE_DEPTH_BUFFER_PREVIEW, 0)
@@ -97,20 +97,20 @@ def main(args):
         't_s_core': 'no_core',
         't_s_name': 'tactip',
         't_s_dynamics': {},
-        'show_gui': args.show_gui,
-        'show_tactile': args.show_tactile,
+        'show_gui': args["show_gui"],
+        'show_tactile': args["show_tactile"],
         'nx': 50,
         'ny': 50
     }
        
     # Load object\
-    if args.dataset == 'ShapeNetCore':
+    if args["dataset"] == 'ShapeNetCore':
         dataset_module = os.path.dirname(ShapeNetCore.__file__)
-    elif args.dataset == 'ShapeNetCore_test':
+    elif args["dataset"] == 'ShapeNetCore_test':
         dataset_module = os.path.dirname(ShapeNetCore_test.__file__)
-    elif args.dataset == 'ABC_train':
+    elif args["dataset"] == 'ABC_train':
         dataset_module = os.path.dirname(ABC_train.__file__)
-    elif args.dataset == 'ABC_test':
+    elif args["dataset"] == 'ABC_test':
         dataset_module = os.path.dirname(ABC_test.__file__)
     else:
         raise ValueError('Dataset not recognised')
@@ -124,7 +124,7 @@ def main(args):
     # Saving
     iteration = 0
     # If folder 'args.output_name' does not exists, create it
-    output_dir = os.path.join(os.path.dirname(results.__file__), f'touch_charts_gt_{args.name_output}')
+    output_dir = os.path.join(os.path.dirname(results.__file__), f'touch_charts_gt_{args["name_output"]}')
     # Check if the directory exists and create it if it doesn't
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -152,7 +152,7 @@ def main(args):
                     initial_obj_orn,
                     useFixedBase=True,
                     flags=pb.URDF_INITIALIZE_SAT_FEATURES,
-                    globalScaling=args.scale
+                    globalScaling=args["scale"]
                 )
                 print(f'PyBullet object ID: {obj_id}')
             except:
@@ -169,7 +169,7 @@ def main(args):
         obj_path = os.path.join(obj_dir, "model.obj")
         mesh_original = utils_mesh._as_mesh(trimesh.load(obj_path))
         # Process object vertices to match thee transformations on the urdf file
-        vertices_wrld = utils_mesh.rotate_pointcloud(mesh_original.vertices, initial_obj_rpy) * args.scale + initial_obj_pos
+        vertices_wrld = utils_mesh.rotate_pointcloud(mesh_original.vertices, initial_obj_rpy) * args["scale"] + initial_obj_pos
         mesh = trimesh.Trimesh(vertices=vertices_wrld, faces=mesh_original.faces)
 
         # Ray: sqrt( (x1 - xc)**2 + (y1 - yc)**2)
@@ -179,7 +179,7 @@ def main(args):
         time_str = datetime.now().strftime('%d_%m_%H%M%S')
         counter_render_scene = 0
 
-        for sample in range(args.num_samples):
+        for sample in range(args["num_samples"]):
 
             # Initialise dict with arrays to store.
             data = {
@@ -265,7 +265,7 @@ def main(args):
             iteration+=1
 
             # Save picture for debugging
-            if args.render_scene:
+            if args["render_scene"]:
                 # Camera settings
                 fov = 50
                 width = 512
@@ -302,7 +302,7 @@ def main(args):
 
         pb.removeBody(obj_id)
 
-        if args.show_gui:
+        if args["show_gui"]:
             time.sleep(1)
 
 

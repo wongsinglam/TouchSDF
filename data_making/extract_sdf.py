@@ -114,7 +114,7 @@ def main(args):
 
 
 if __name__=='__main__':
-    cfg_path = os.path.join(os.path.dirname(config_files.__file__), 'pipeline_deepsdf.yaml')
+    cfg_path = os.path.join(os.path.dirname(config_files.__file__), 'extract_sdf.yaml')
     with open(cfg_path, 'rb') as f:
         cfg = yaml.load(f, Loader=yaml.FullLoader)
 

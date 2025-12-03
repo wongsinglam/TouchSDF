@@ -253,7 +253,16 @@ class Trainer():
             if args.clamp:
                 predictions = torch.clamp(predictions, -args.clamp_value, args.clamp_value)
             
-            loss_value, l1, l2 = self.args.loss_multiplier * SDFLoss_multishape(y, predictions, x[:, :self.args.latent_size], sigma=self.args.sigma_regulariser)
+            loss_value, l1, l2 = SDFLoss_multishape(
+                y,
+                predictions,
+                x[:, : self.args.latent_size],
+                sigma=self.args.sigma_regulariser,
+            )
+            loss_multiplier = self.args.loss_multiplier
+            loss_value = loss_multiplier * loss_value
+            l1 = loss_multiplier * l1
+            l2 = loss_multiplier * l2
             loss_value.backward()     
 
             print(f'Rank {self.rank}, Loss value {loss_value.item()}')
@@ -302,7 +311,13 @@ class Trainer():
             if args.clamp:
                 predictions = torch.clamp(predictions, -args.clamp_value, args.clamp_value)
 
-            loss_value, loss_rec, loss_latent = self.args.loss_multiplier * SDFLoss_multishape(y, predictions, latent_codes_batch, self.args.sigma_regulariser)          
+            loss_value, loss_rec, loss_latent = SDFLoss_multishape(
+                y, predictions, latent_codes_batch, self.args.sigma_regulariser
+            )
+            loss_multiplier = self.args.loss_multiplier
+            loss_value = loss_multiplier * loss_value
+            loss_rec = loss_multiplier * loss_rec
+            loss_latent = loss_multiplier * loss_latent
             total_loss += loss_value.data.cpu().numpy()   
             total_loss_rec += loss_rec.data.cpu().numpy() 
             total_loss_latent += loss_latent.data.cpu().numpy()

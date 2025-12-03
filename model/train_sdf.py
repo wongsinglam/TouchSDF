@@ -281,12 +281,16 @@ class Trainer:
                     predictions, -self.args["clamp_value"], self.args["clamp_value"]
                 )
 
-            loss_value, l1, l2 = self.args["loss_multiplier"] * SDFLoss_multishape(
+            loss_value, l1, l2 = SDFLoss_multishape(
                 y,
                 predictions,
                 x[:, : self.args["latent_size"]],
                 sigma=self.args["sigma_regulariser"],
             )
+            loss_multiplier = self.args["loss_multiplier"]
+            loss_value = loss_multiplier * loss_value
+            l1 = loss_multiplier * l1
+            l2 = loss_multiplier * l2
             loss_value.backward()
 
             self.optimizer_latent.step()
@@ -327,11 +331,13 @@ class Trainer:
                     predictions, -self.args["clamp_value"], self.args["clamp_value"]
                 )
 
-            loss_value, loss_rec, loss_latent = self.args[
-                "loss_multiplier"
-            ] * SDFLoss_multishape(
+            loss_value, loss_rec, loss_latent = SDFLoss_multishape(
                 y, predictions, latent_codes_batch, self.args["sigma_regulariser"]
             )
+            loss_multiplier = self.args["loss_multiplier"]
+            loss_value = loss_multiplier * loss_value
+            loss_rec = loss_multiplier * loss_rec
+            loss_latent = loss_multiplier * loss_latent
             total_loss += loss_value.data.cpu().numpy()
             total_loss_rec += loss_rec.data.cpu().numpy()
             total_loss_latent += loss_latent.data.cpu().numpy()
@@ -349,7 +355,7 @@ class Trainer:
 
 if __name__ == "__main__":
     train_cfg_path = os.path.join(
-        os.path.dirname(config_files.__file__), "pipeline_tactile.yaml"
+        os.path.dirname(config_files.__file__), "train_sdf.yaml"
     )
     with open(train_cfg_path, "rb") as f:
         train_cfg = yaml.load(f, Loader=yaml.FullLoader)

@@ -25,3 +25,4 @@ dependencies:
       - gym
       - scikit-learn
       - plotly
+      - point_cloud_utils

@@ -24,3 +24,4 @@ dependencies:
       - pybullet
       - gym
       - scikit-learn
+      - plotly

@@ -12,7 +12,7 @@ augment_multiplier_out: 5    # Multiplier to augment the positive distances
 obj_folder: '02942699/6d036fd1c70e5a5849493d905c02fa86'    # Object to reconstruct as obj_class/obj_category, e.g. 02818832/1aa55867200ea789465e08d496c0420f
 
 # Arguments for deepsdf
-folder_sdf: '24_03_190521'     # Folder containing the sdf model weights
+folder_sdf: '03_12_150142'     # Folder containing the sdf model weights
 latent_size: 128    # Folder containing the touch model weights
 lr: 0.0005     # Learning rate to infer the latent code
 lr_scheduler: True    # Scheduler for the learning rate

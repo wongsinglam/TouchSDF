@@ -25,5 +25,6 @@ dependencies:
       - pybullet
       - gym
       - scikit-learn
+      - scikit-image
       - plotly
       - point_cloud_utils
